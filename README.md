@@ -11,7 +11,7 @@ The GPR_Unit_Provider library depends on some other external libraries:
 
 * [GPR](https://github.com/AdaCore/gpr)
 
-* [Libadalanf](https://github.com/AdaCore/libadalang)
+* [Libadalang](https://github.com/AdaCore/libadalang)
 
 Both must be installed on the system to be able to compile GPR_Unit_Provider.
 
