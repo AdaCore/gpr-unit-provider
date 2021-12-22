@@ -1,0 +1,13 @@
+*.o
+*.ali
+.build*
+
+# GNAT/GPS/GDB junk
+auto.cgpr
+gnatinspect.db
+gnatinspect.db-*
+*-loc.xml
+.gdb_history
+.gnatdebug
+.clang-format
+.clangd

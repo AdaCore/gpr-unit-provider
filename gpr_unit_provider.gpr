@@ -1,0 +1,106 @@
+------------------------------------------------------------------------------
+--                            GPR UNIT PROVIDER                             --
+--                                                                          --
+--                       Copyright (C) 2021, AdaCore                        --
+--                                                                          --
+-- This library is free software;  you can redistribute it and/or modify it --
+-- under terms of the  GNU General Public License  as published by the Free --
+-- Software  Foundation;  either version 3,  or (at your  option) any later --
+-- version. This library is distributed in the hope that it will be useful, --
+-- but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- --
+-- TABILITY or FITNESS FOR A PARTICULAR PURPOSE.                            --
+--                                                                          --
+-- As a special exception under Section 7 of GPL version 3, you are granted --
+-- additional permissions described in the GCC Runtime Library Exception,   --
+-- version 3.1, as published by the Free Software Foundation.               --
+--                                                                          --
+-- You should have received a copy of the GNU General Public License and    --
+-- a copy of the GCC Runtime Library Exception along with this program;     --
+-- see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see    --
+-- <http://www.gnu.org/licenses/>.                                          --
+--                                                                          --
+------------------------------------------------------------------------------
+
+with "gpr2";
+with "libadalang";
+project gpr_unit_provider is
+
+   type Build_Type is ("debug", "release", "release_checks");
+   Build : Build_Type := external ("BUILD", "debug");
+
+   type Profiler_Flag is ("yes", "no");
+   Profiler : Profiler_Flag := External ("PROFILER", "no");
+
+   Processors := external ("PROCESSORS", "0");
+
+   type Library_Kind is ("static", "relocatable", "static-pic");
+   Library_Type : Library_Kind := external ("LIBRARY_TYPE", "static");
+
+   for Languages use ("Ada");
+   for Source_Dirs use ("src");
+   for Library_Name use "gprunitprovider";
+
+   for Object_Dir use ".build/" & Build & "/obj-" & Library_Type;
+   for Library_Dir use ".build/" & Build & "/lib-" & Library_Type;
+   for Library_Kind use Library_Type;
+
+   --------------
+   -- Compiler --
+   --------------
+
+   Common_Options :=
+     ("-gnatwcfijkmqrtuvwz", "-gnaty3abBcdefhiIklmnoOprstx");
+   --  Common options used for the Debug and Release modes
+
+   case Profiler is
+      when "yes" =>
+         Common_Options := Common_Options & "-pg";
+      when "no" =>
+         null;
+   end case;
+
+   Checks_Options :=
+     ("-gnata", "-gnatVa", "-gnato", "-fstack-check");
+   --  Common options used to enable checking for the Debug and Release_Checks
+   --  modes
+
+   Debug_Options :=
+     ("-g", "-gnatQ", "-gnatwe");
+
+   Release_Options :=
+     ("-O2", "-gnatn");
+
+   package Compiler is
+
+      case Build is
+         when "debug" =>
+            for Default_Switches ("Ada") use Common_Options & Checks_Options &
+                                             Debug_Options;
+
+         when "release_checks" =>
+            for Default_Switches ("Ada") use Common_Options & Checks_Options &
+                                             Release_Options;
+
+         when "release" =>
+            for Default_Switches ("Ada") use Common_Options & Release_Options;
+      end case;
+
+   end Compiler;
+
+   ------------
+   -- Binder --
+   ------------
+
+   package Binder is
+      for Default_Switches ("Ada") use ("-Es");
+   end Binder;
+
+   -------------
+   -- Builder --
+   -------------
+
+   package Builder is
+      for Switches (others) use ("-m", "-j" & Processors);
+   end Builder;
+
+end gpr_unit_provider;
