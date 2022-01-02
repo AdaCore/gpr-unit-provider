@@ -1,0 +1,5 @@
+description:
+    A test for empty project partition
+driver: build_and_run
+project_file: default.gpr
+main: main

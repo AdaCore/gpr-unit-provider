@@ -327,6 +327,8 @@ package body Libadalang.GPR2_Provider is
          end;
       end if;
 
+      Trace.Decrease_Indent;
+
       --  For debuggability, log how the Tree was partitionned
 
       if Trace.Is_Active then
@@ -342,8 +344,6 @@ package body Libadalang.GPR2_Provider is
          end loop;
          Trace.Decrease_Indent;
       end if;
-
-      Trace.Decrease_Indent;
 
       --  The partition is ready: turn each part into a unit provider and
       --  return the list.

@@ -1,0 +1,23 @@
+with "gpr2";
+with "libadalang";
+with "gpr_unit_provider";
+
+project Default is
+   for Source_Dirs use (".");
+   for Main use ("main.adb");
+   for Object_dir use "obj";
+   for exec_dir use ".";
+
+   package Compiler is
+      for Default_Switches ("Ada") use
+         ("-gnatw.u", -- warn inappropriate use of unordered enums
+               "-g",
+               "-O0",
+               "-gnata",
+               "-gnatVa");
+   end Compiler;
+   
+   package Binder is
+      for Default_Switches ("Ada") use ("-Es");
+   end Binder; 
+end Default;

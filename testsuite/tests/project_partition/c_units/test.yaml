@@ -1,0 +1,5 @@
+description:
+    A test for project prtition with non-ada files
+driver: build_and_run
+project_file: default.gpr
+main: main
