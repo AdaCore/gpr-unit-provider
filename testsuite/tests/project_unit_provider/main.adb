@@ -38,6 +38,7 @@ procedure Main is
      (File : GPR2.Filename_Type; Project : GPR2.Optional_Name_Type := "")
       return Unit_Provider_Reference
    is
+      use type GPR2.Optional_Name_Type;
       Prj  : GPR2.Project.View.Object := Undefined;
    begin
       Put_Line ("Loading " & String (File) & "...");
@@ -48,13 +49,14 @@ procedure Main is
         (Filename => GPR2.Path_Name.Create_File (File),
          Context  => GPR2.Context.Empty);
       if Project'Length > 0 then
-         if Tree.Has_View_For (Project, GPR2.Context.Aggregate) then
-            Prj := Tree.View_For (Project, GPR2.Context.Aggregate);
-         elsif Tree.Has_View_For (Project, GPR2.Context.Root) then
-            Prj := Tree.View_For (Project, GPR2.Context.Root);
-         else
-            pragma Assert (False);
-         end if;
+         for V of Tree.Ordered_Views loop
+            if V.Name = Project then
+               Prj := V;
+               exit;
+            end if;
+         end loop;
+
+         pragma Assert (Prj.Is_Defined);
       end if;
       return Create_Project_Unit_Provider (Tree, Prj);
    exception
