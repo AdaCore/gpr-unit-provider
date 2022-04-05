@@ -145,6 +145,9 @@ package body Libadalang.GPR2_Provider is
    begin
       --  If no project was given, try to run the partitionner
 
+      Tree.Invalidate_Sources;
+      Tree.Update_Sources (Stop_On_Error => False, With_Runtime => True);
+
       if not Actual_Project.Is_Defined then
          declare
             Result   : LAL.Unit_Provider_Reference;
@@ -164,8 +167,6 @@ package body Libadalang.GPR2_Provider is
             return Result;
          end;
       end if;
-
-      Tree.Update_Sources (Stop_On_Error => False);
 
       --  Peel the aggregate project layers (if any) around Actual_Project. If
       --  we find an aggregate project with more than one aggregated project,
@@ -242,7 +243,8 @@ package body Libadalang.GPR2_Provider is
       Trace.Increase_Indent
         ("Trying to partition " & String (Tree.Root_Project.Name));
 
-      Tree.Update_Sources (Stop_On_Error => False);
+      Tree.Invalidate_Sources;
+      Tree.Update_Sources (Stop_On_Error => False, With_Runtime => True);
 
       if Tree.Root_Project.Kind = K_Aggregate then
 
@@ -516,6 +518,26 @@ package body Libadalang.GPR2_Provider is
 
          end loop;
       end loop;
+
+      if Provider.Tree.Has_Runtime_Project then
+         declare
+            Inf : constant GPR2.Project.Unit_Info.Object :=
+                    Provider.Tree.Runtime_Project.Unit (Str_Name);
+         begin
+            if Inf.Is_Defined then
+               case Kind is
+                  when Unit_Specification =>
+                     if Inf.Has_Spec then
+                        return Inf.Spec.Source.Value;
+                     end if;
+                  when Unit_Body =>
+                     if Inf.Has_Body then
+                        return Inf.Main_Body.Source.Value;
+                     end if;
+               end case;
+            end if;
+         end;
+      end if;
 
       return "";
    end Get_Unit_Filename;
