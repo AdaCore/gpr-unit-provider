@@ -40,7 +40,6 @@ with Libadalang.Common;
 with Libadalang.GPR2_Lock;
 with Libadalang.Unit_Files;
 
-
 package body Libadalang.GPR2_Provider is
 
    package US renames Ada.Strings.Unbounded;
@@ -435,6 +434,10 @@ package body Libadalang.GPR2_Provider is
             Process (P);
          end loop;
 
+         for P of Prj.Limited_Imports loop
+            Process (P);
+         end loop;
+
       end Process;
 
    begin
@@ -538,6 +541,8 @@ package body Libadalang.GPR2_Provider is
             end if;
          end;
       end if;
+
+      Trace.Trace ("No " & Kind'Img & " for " & String (Str_Name));
 
       return "";
    end Get_Unit_Filename;
