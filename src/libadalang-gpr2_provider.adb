@@ -2,7 +2,7 @@
 --                                                                          --
 --                                Libadalang                                --
 --                                                                          --
---                       Copyright (C) 2021, AdaCore                        --
+--                     Copyright (C) 2021-2022, AdaCore                     --
 --                                                                          --
 -- Libadalang is free software;  you can redistribute it and/or modify  it  --
 -- under terms of the GNU General Public License  as published by the Free  --
@@ -144,9 +144,6 @@ package body Libadalang.GPR2_Provider is
    begin
       --  If no project was given, try to run the partitionner
 
-      Tree.Invalidate_Sources;
-      Tree.Update_Sources (Stop_On_Error => False, With_Runtime => True);
-
       if not Actual_Project.Is_Defined then
          declare
             Result   : LAL.Unit_Provider_Reference;
@@ -241,9 +238,6 @@ package body Libadalang.GPR2_Provider is
    begin
       Trace.Increase_Indent
         ("Trying to partition " & String (Tree.Root_Project.Name));
-
-      Tree.Invalidate_Sources;
-      Tree.Update_Sources (Stop_On_Error => False, With_Runtime => True);
 
       if Tree.Root_Project.Kind = K_Aggregate then
 

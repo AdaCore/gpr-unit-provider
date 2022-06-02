@@ -2,7 +2,7 @@
 --                                                                          --
 --                                Libadalang                                --
 --                                                                          --
---                       Copyright (C) 2021, AdaCore                        --
+--                     Copyright (C) 2021-2022, AdaCore                     --
 --                                                                          --
 -- Libadalang is free software;  you can redistribute it and/or modify  it  --
 -- under terms of the GNU General Public License  as published by the Free  --
@@ -35,6 +35,14 @@ with Libadalang.Analysis;
 --  GPR2 project library.
 
 package Libadalang.GPR2_Provider is
+
+   --  In order for unit names to be resolved the sources of project tree
+   --  need to be computed, so GPR2.Tree.Update_Sources needs to be called
+   --  before creating a unit provider. In addition, in order to resolve
+   --  runtime unit names corresponding project tree sources need to be updated
+   --  with runtime files included: With_Runtime parameter of Update_Sources
+   --  needs to be set to True. Source recomputation is a costly operation and
+   --  unit provider does not enforce it to avoid unnecessary recomputation.
 
    package LAL renames Libadalang.Analysis;
 

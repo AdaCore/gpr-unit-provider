@@ -5,9 +5,6 @@
 with Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
---  with GNATCOLL.Projects; use GNATCOLL.Projects;
---  with GNATCOLL.VFS;      use GNATCOLL.VFS;
-
 with GPR2.Path_Name;
 with GPR2.Project.Tree;
 with GPR2.Context;
@@ -16,7 +13,6 @@ with GPR2.Project.View; use GPR2.Project.View;
 with Libadalang.Analysis;         use Libadalang.Analysis;
 with Libadalang.Common;           use Libadalang.Common;
 with Libadalang.Iterators;        use Libadalang.Iterators;
---  with Libadalang.Project_Provider; use Libadalang.Project_Provider;
 with Libadalang.GPR2_Provider; use Libadalang.GPR2_Provider;
 
 with GNAT.Traceback.Symbolic;
@@ -48,6 +44,7 @@ procedure Main is
       Tree.Load_Autoconf
         (Filename => GPR2.Path_Name.Create_File (File),
          Context  => GPR2.Context.Empty);
+      Tree.Update_Sources;
       if Project'Length > 0 then
          for V of Tree.Ordered_Views loop
             if V.Name = Project then
@@ -89,22 +86,14 @@ procedure Main is
 
 begin
    Try_Loading_Project ("unsupported_aggr.gpr");
---     Tree.Unload;
    Try_Loading_Project ("unsupported_aggr.gpr", "unsupported_aggr");
---     Tree.Unload;
    Try_Loading_Project ("unsupported_aggr.gpr", "p");
---     Tree.Unload;
    Try_Loading_Project ("supported_no_conflict.gpr");
---     Tree.Unload;
    Try_Loading_Project ("supported_simple_aggr.gpr");
---     Tree.Unload;
    Try_Loading_Project ("supported_simple_aggr.gpr", "supported_simple_aggr");
---     Tree.Unload;
    Try_Loading_Project ("supported_chained_aggr.gpr");
---     Tree.Unload;
    Try_Loading_Project ("supported_chained_aggr.gpr",
                         "supported_chained_aggr");
---     Tree.Unload;
 
    declare
       Ctx  : constant Analysis_Context :=
