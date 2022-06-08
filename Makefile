@@ -2,7 +2,7 @@
 ##                                                                          ##
 ##                             GPR UNIT PROVIDER                            ##
 ##                                                                          ##
-##            Copyright (C) 2021, Free Software Foundation, Inc.            ##
+##          Copyright (C) 2021-2022, Free Software Foundation, Inc.         ##
 ##                                                                          ##
 ## This library is free software;  you can redistribute it and/or modify it ##
 ## under terms of the  GNU General Public License  as published by the Free ##
@@ -30,17 +30,17 @@
 
 # Variables which can be set:
 #
-#   prefix        : root install directory
-#   ENABLE_SHARED : yes / no (or empty)
-#   BUILD         : debug release
-#   PROCESSORS    : nb parallel compilations (0 to use all cores)
-#   TARGET        : target triplet for cross-compilation
+#   prefix                  : root install directory
+#   ENABLE_SHARED           : yes / no (or empty)
+#   GPR_UNIT_PROVIDER_BUILD : debug release
+#   PROCESSORS              : nb parallel compilations (0 to use all cores)
+#   TARGET                  : target triplet for cross-compilation
 
 HOST    = $(shell gcc -dumpmachine)
 TARGET := $(shell gcc -dumpmachine)
 
 prefix	      := $(dir $(shell which gnatls))..
-BUILD         = release
+GPR_UNIT_PROVIDER_BUILD = release
 PROCESSORS    = 0
 BUILD_DIR     =
 ENABLE_SHARED := $(shell gprbuild $(GTARGET) -c -q -p \
@@ -64,7 +64,7 @@ endif
 GPRBUILD_OPTIONS=
 
 
-GPR_OPTIONS=$(GTARGET) -XBUILD=${BUILD}
+GPR_OPTIONS=$(GTARGET) -XGPR_UNIT_PROVIDER_BUILD=${GPR_UNIT_PROVIDER_BUILD}
 
 BUILDER=gprbuild -p -m -j${PROCESSORS} ${GPR_OPTIONS} ${GPRBUILD_OPTIONS}
 INSTALLER=${GPRINSTALL} -p -f ${GPR_OPTIONS} --prefix=${prefix}
