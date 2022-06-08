@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                            GPR UNIT PROVIDER                             --
 --                                                                          --
---                       Copyright (C) 2021, AdaCore                        --
+--                     Copyright (C) 2021-2022, AdaCore                     --
 --                                                                          --
 -- This library is free software;  you can redistribute it and/or modify it --
 -- under terms of the  GNU General Public License  as published by the Free --
@@ -26,7 +26,8 @@ with "libadalang";
 project gpr_unit_provider is
 
    type Build_Type is ("debug", "release", "release_checks");
-   Build : Build_Type := external ("BUILD", "debug");
+   Build : Build_Type := external ("GPR_UNIT_PROVIDER_BUILD",
+     external ("BUILD", "debug"));
 
    type Profiler_Flag is ("yes", "no");
    Profiler : Profiler_Flag := External ("PROFILER", "no");
