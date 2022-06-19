@@ -2,7 +2,7 @@
 --                                                                          --
 --                                Libadalang                                --
 --                                                                          --
---                       Copyright (C) 2021, AdaCore                        --
+--                     Copyright (C) 2021-2022, AdaCore                     --
 --                                                                          --
 -- Libadalang is free software;  you can redistribute it and/or modify  it  --
 -- under terms of the GNU General Public License  as published by the Free  --
@@ -66,6 +66,14 @@ package Libadalang.GPR2_Provider is
    --
    --  The project pointed to by ``Tree`` must outlive the returned unit file
    --  providers, and it is up to callers to deallocate ``Tree`` itself.
+   --
+   --  In order for unit names to be resolved the sources of project tree
+   --  need to be computed, so GPR2.Tree.Update_Sources needs to be called
+   --  before creating a unit provider. In addition, in order to resolve
+   --  runtime unit names corresponding project tree sources need to be updated
+   --  with runtime files included: With_Runtime parameter of Update_Sources
+   --  needs to be set to True. Source recomputation is a costly operation and
+   --  unit provider does not enforce it to avoid unnecessary recomputation.
 
    Unsupported_View_Error : exception;
    --  See the ``Create_Project_Unit_Provider`` function
@@ -80,10 +88,11 @@ package Libadalang.GPR2_Provider is
    --  ``Unsupported_View_Error`` exception if that project aggregates more
    --  than one project in its closure.
    --
-   --  If Project is not provided, run ``Create_Project_Unit_Providers``: if it
-   --  returns only one provider, return it, otherwise raise an
+   --  If Project is not provided, run ``Create_Project_Unit_Providers``:
+   --  if it returns only one provider, return it, otherwise raise an
    --  ``Unsupported_View_Error`` exception.
    --
-   --  Tree must outlive the returned unit file provider.
+   --  Tree must outlive the returned unit file provider and project tree
+   --  sources must be initialized (see ``Create_Project_Unit_Providers``).
 
 end Libadalang.GPR2_Provider;
