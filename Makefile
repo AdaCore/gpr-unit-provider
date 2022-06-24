@@ -99,7 +99,7 @@ install: uninstall ${LIB_TYPES:%=install-%}
 install-%:
 	$(INSTALLER) -XLIBRARY_TYPE=$* -XXMLADA_BUILD=$* \
 		--build-name=$* --build-var=LIBRARY_TYPE \
-		--build-var=GPR_UNIT_PROVIDER_BUILD -P gpr_unit_provider.gpr
+		--build-var=GPR_UNIT_PROVIDER_LIBRARY_TYPE -P gpr_unit_provider.gpr
 
 
 ###########
