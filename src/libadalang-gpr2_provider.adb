@@ -236,8 +236,10 @@ package body Libadalang.GPR2_Provider is
 
       Partition : Aggregate_Part_Vectors.Vector;
    begin
-      Trace.Increase_Indent
-        ("Trying to partition " & String (Tree.Root_Project.Name));
+      if Trace.Is_Active then
+         Trace.Increase_Indent
+           ("Trying to partition " & String (Tree.Root_Project.Name));
+      end if;
 
       if Tree.Root_Project.Kind = K_Aggregate then
 
@@ -322,7 +324,9 @@ package body Libadalang.GPR2_Provider is
          end;
       end if;
 
-      Trace.Decrease_Indent;
+      if Trace.Is_Active then
+         Trace.Decrease_Indent;
+      end if;
 
       --  For debuggability, log how the Tree was partitionned
 
